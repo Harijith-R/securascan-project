@@ -1,0 +1,44 @@
+# This workflow deploys your backend server to Vercel
+
+name: Deploy Backend to Vercel
+
+on:
+  push:
+    branches:
+      - main  # Triggers on push to the main branch
+    paths:
+      - 'backend/**'  # Only runs if files in the 'backend' folder changed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Matches the 'engines' in your package.json
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Project Settings
+        # This links your local checkout to the Vercel project
+        # Requires VERCEL_ORG_ID and VERCEL_PROJECT_ID secrets
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./backend
+
+      - name: Build and Deploy to Vercel Production
+        # This builds and deploys. The --prod flag sends it to production.
+        # It also passes your environment variables (secrets) to Vercel.
+        run: |
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} && \
+          vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }} \
+          --build-env FIREBASE_SERVICE_ACCOUNT_KEY='${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}' \
+          --build-env RAZORPAY_WEBHOOK_SECRET='${{ secrets.RAZORPAY_WEBHOOK_SECRET }}' \
+          --build-env APP_ID='${{ secrets.APP_ID }}'
+        working-directory: ./backend
+

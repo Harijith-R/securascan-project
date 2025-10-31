@@ -1,0 +1,36 @@
+# This workflow deploys your frontend to Cloudflare Pages
+
+name: Deploy Frontend to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main  # Triggers on push to the main branch
+    paths:
+      - 'frontend/**' # Only runs if files in the 'frontend' folder changed
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Publish to Cloudflare Pages
+        # This action builds and deploys your static site
+        # It requires your Cloudflare API Token and Account ID
+        # The 'projectName' must match the project name you create in your Cloudflare Pages dashboard
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'securascan' # <-- IMPORTANT: Change this to your Cloudflare Pages project name
+          directory: 'frontend' # The folder containing your HTML files
+          # Optional: Specify branch if needed
+          # branch: 'main'
+
