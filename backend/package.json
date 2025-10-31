@@ -1,0 +1,22 @@
+{
+  "name": "securascan-backend",
+  "version": "1.0.0",
+  "description": "Backend server for SecuraScan to handle Razorpay webhooks.",
+  "main": "razorpay-server.js",
+  "scripts": {
+    "start": "node razorpay-server.js",
+    "dev": "nodemon razorpay-server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "firebase-admin": "^12.0.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": "18"
+  }
+}
+
